@@ -1,0 +1,184 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Audio Dog</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+<!--    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" type="text/javascript"></script>-->
+    <script src="{% static 'js/jquery.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/jquery.nivo.slider.js' %}"></script>
+
+    <script src="{% static 'js/functions.js' %}"></script>
+    <script type="text/javascript">
+
+		$(window).on('load', function() {
+		    $('#slider').nivoSlider();
+		});
+
+    function showEliminar(usuarioId) {
+
+      if (confirm('Está seguro de eliminar el usuario seleccionado?')) {
+        unsetUsuario(usuarioId);
+      }
+
+    }
+
+    function unsetUsuario(usuarioId) {
+
+      $.get(
+        '{% url "usuario_eliminar" %}',
+        {
+          usuario_id : usuarioId,
+        },
+        function (data) {
+
+          if (data.status=="success") {
+            alert("Usuario eliminado");
+            location.reload();
+          }
+
+        }
+      )
+      .fail(
+        function (jqXHR, textStatus, errorThrown) {
+
+          alert(jqXHR.status+"\n"+textStatus+"\n"+errorThrown);
+
+        }
+      );
+
+    }
+
+
+    </script>
+
+    <link rel="stylesheet" href="{% static 'css/flexboxgrid.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mi-slider.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nivo-slider.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+
+
+<body>
+    <div class="container-fluid sitio">
+        <div class="row">
+            <div class="col-xs-12 col-md-4 logo">
+                <a href="index.html"><img src="{% static 'img/logo1.png' %}" alt="Logo Audio Dog"></a>
+            </div>
+
+            <div class="col-xs-12 col-md-8 menu">
+                <a href="{% url 'usuario_registro' %}"><div class="opcion">Registro</div></a>
+                <a href="{% url 'cancion_subir' %}"><div class="opcion">Subir canci&oacute;n</div></a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="slider-wrapper theme-mi-slider carousel">
+                    <div id="slider" class="nivoSlider">
+                        <img src="{% static 'img/1.jpg' %}" alt="" title="#htmlcaption1" />
+                        <img src="{% static 'img/2.jpg' %}" alt="" title="#htmlcaption2" />
+                        <img src="{% static 'img/3.jpg' %}" alt="" title="#htmlcaption3" />
+                        <img src="{% static 'img/4.jpg' %}" alt="" title="#htmlcaption4" />
+                        <img src="{% static 'img/5.jpg' %}" alt="" title="#htmlcaption5" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 principal">
+                <div class="row">
+                    <div class="col-xs-12 cancion-titulo">
+                        <h1>CANCIONES</h1>
+                    </div>
+                </div>
+
+                {% for cancion in canciones %}
+                <div class="row cuadro-cancion">
+
+                    <div class="col-xs-2 col-md-4 col-lg-2 foto-cancion">
+                          {% if cancion.imagen == '' %}
+                            <h2>SIN CARATULA</h2>
+                          {% else %}
+                          <div class="picture">
+                            <img src="{% static 'media/' %}{{ cancion.imagen }}">
+                          </div>
+                          {% endif %}
+                    </div>
+                    <div class="col-xs-10 col-md-8 col-lg-10 texto-cancion">
+                        <div class="news">
+                            <div class="nombre-cancion">
+                              <h1>
+                                <a target="_blank" href="{% static 'media/' %}{{ cancion.archivo }}">{{ cancion.cancion }}</a>
+                              </h1>
+                            </div>
+                            <div class="descripcion-cancion">
+                                <h2>Artista:</h2>
+                                <p>{{ cancion.artista }}</p>
+                                <h2>Duración</h2>
+                                <p>{{ cancion.duracion }}</p>
+                                <h2>País de origen</h2>
+                                <p>{{ cancion.pais }}</p>
+                                <h2>Fecha</h2>
+                                <p>{{ cancion.registro_fecha }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 principal">
+                <div class="row">
+                    <div class="col-xs-12 cancion-titulo">
+                        <h1>USUARIOS REGISTRADOS</h1>
+                    </div>
+                </div>
+
+                {% for usuario in usuarios %}
+                <div class="row cuadro-cancion">
+
+                    <div class="col-xs-10 col-md-8 col-lg-10">
+                        <div class="news">
+                          <table width="100%">
+                            <tr>
+                              <td width="30%">
+                                <div class="nombre-cancion">
+                                  <h1> {{ usuario.nombre }}</h1>
+                                </div>
+                              </td>
+                              <td width="30%">
+                                <div class="descripcion-cancion">
+                                  <h2><a href="mailto:{{ usuario.email }}">{{ usuario.email }}</a></h2>
+                                  <h2><a href="tel:{{ usuario.telefonos }}">{{ usuario.telefonos }}</a></h2>
+                                </div>
+                              </td>
+                              <td width="10%">
+                                <button onclick="showEliminar('{{ usuario.id }}')">Eliminar <img src="{% static 'img/icon-trash-a-512.png' %}" width="30px"></button>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                    </div>
+
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

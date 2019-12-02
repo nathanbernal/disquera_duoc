@@ -1,0 +1,168 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Formulario Prueba</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/flexboxgrid.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.validate.js' %}"></script>
+
+<script>
+    $(function() {
+      $("#btn") .on("click", function(){
+        $("#form") .validate({
+        rules:
+          {
+            email:
+              {
+                required: true,
+                email: true,
+                minlength: 8,
+                maxlength: 80
+              },
+            number:
+              {
+                required: true,
+                digits: true,
+                minlength: 4,
+                maxlength: 10
+              }
+          },
+        messages:
+          {
+            email:
+              {
+                required: 'El campo es requerido',
+                email: 'El formato de email es incorrecto',
+                minlength: 'El minimo permitido son 8 caracteres',
+                maxlength: 'El maximo permitido son 80 caracteres'
+              },
+            number:
+              {
+                required: 'El campo es requerido',
+                digits: 'Solo se aceptan digitos',
+                minlength: 'El minimo permitido son 2 digitos',
+                maxlength: 'El maximo permitido son 10 digitos'
+              }
+          }
+        });
+      });
+    });
+</script>
+</head>
+<body>
+    <div class="container-fluid sitio">
+        <div class="row">
+            <div class="col-xs-12 col-md-4 logo">
+                <a href="index.html"><img src="{% static 'img/logo1.png' %}" alt="Logo Audio Dog"></a>
+            </div>
+
+            <div class="col-xs-12 col-md-8 menu">
+                <a href="/"><div class="opcion-volver">volver</div></a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 principal reg">
+                <div class="row">
+                    <div class="col-xs-12 titulo-registro">
+                        <h1>REGISTRO DE CANCIÓN</h1>
+                    </div>
+                </div>
+
+                <div class="row cuadro-registro">
+                    <div class="col-xs-12 col-md-6 form-registro">
+                        <div class="row">
+                            <div class="col-xs-12 reg-titulo">
+                                <h3>Datos de cancion - datos requeridos(*) -</h3>
+                            </div>
+                        </div>
+
+                        <form method="post" action="/cancion_guardar/" method="POST" enctype="multipart/form-data">
+
+                          {% csrf_token %}
+
+                            <div class="row parte">
+                                <div class="col-xs-12 cuadro-input">
+
+                                    <label for="cancion">Titulo canción *</label>
+                                    <input type="text" class="input" name="cancion" id="cancion" minlength="3" maxlength="40" pattern="[áÁàÀéÉèÈíÍìÌóÓòÒúÚùÙa-zA-Z ]{3,40}"
+                                    placeholder="Nombre canción (sólo letras, máx 40 caracteres)" title="Sólo letras están permitidas" autocomplete="off" validate required>
+
+                                </div>
+                            </div>
+
+                            <div class="row parte">
+                                <div class="col-xs-6 cuadro-input">
+
+                                    <label for="nombreartista">Artista *</label>
+                                    <input type="text" class="input" name="artista" id="artista" minlength="3" maxlength="40" pattern="[áÁàÀéÉèÈíÍìÌóÓòÒúÚùÙa-zA-Z ]{3,40}"
+                                    placeholder="Nombre artista (sólo letras, máx 40 caracteres)" title="Sólo letras están permitidas" autocomplete="off" validate required>
+
+                                </div>
+
+                                <div class="col-xs-6 cuadro-input">
+
+                                    <label for="duracion">Duración *</label>
+                                    <input type="number" class="input" name="duracion" id="artista" minlength="3" maxlength="40" pattern="[0-9]{3}"
+                                    placeholder="Ingrese duración en segundos" title="Sólo números" autocomplete="off" validate required>
+
+                                </div>
+                            </div>
+
+                            <div class="row parte">
+                                <div class="col-xs-12 cuadro-input">
+
+                                    <label for="pais">País *</label>
+                                    <select class="input" name="pais" id="pais">
+                                      {% for pais in paises %}
+                                      <option value="{{ pais.id }}">{{ pais.id }} - {{ pais.pais }}</option>
+                                      {% endfor %}
+                                    </select>
+
+                                </div>
+                            </div>
+
+                            <div class="row parte">
+                                <div class="col-xs-6 cuadro-input">
+                                    <label for="caratula">Subir Carátula (JPG/PNG/TIFF)*</label>
+                                    <input type="file" id="caratula" name="caratula" accept="image/png, .tif, .jpg" autocomplete="off" validate required>
+                                </div>
+
+                                <div class="col-xs-6 cuadro-input">
+                                    <label for="caratula">Subir archivo de audio (MP3/OGG)*</label>
+                                    <input type="file" id="audio" name="audio" accept="audio/mp3, .ogg" autocomplete="off" validate required>
+                                </div>
+                            </div>
+
+                            <div class="row parte">
+                                <div class="col-xs-6 cuadro-input">
+                                    <label for="usuario">Usuario</label>
+                                    <input type="text" class="input" name="usuario" id="usuario" minlength="3" maxlength="40" required>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12 bot">
+                                    <button type="submit">Envíar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
