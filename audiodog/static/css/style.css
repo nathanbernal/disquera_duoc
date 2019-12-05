@@ -235,6 +235,10 @@ button{
     background: #7ccee6;
 }
 
+.btn {
+  width: 30px;
+}
+
 button:hover{
     background: #35a0bf;
 }

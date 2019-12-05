@@ -66,6 +66,16 @@ def usuario_eliminar(request):
 
     return JsonResponse({"status":"success"})
 
+def cancion_eliminar(request):
+
+    logger.error('ELIMINANDO CANCION  '+request.GET["cancion_id"])
+
+    cancion_id=request.GET["cancion_id"]
+    cancion = Cancion.objects.filter(id=cancion_id)
+    cancion.delete()
+
+    return JsonResponse({"status":"success"})
+
 def ciudad_get(request):
 
     logger.error('RECUPERANDO CIUDADES ')

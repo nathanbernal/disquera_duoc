@@ -29,6 +29,14 @@
 
     }
 
+    function showEliminarCancion(cancionId) {
+
+      if (confirm('Está seguro de eliminar la canción seleccionado?')) {
+        unsetCancion(cancionId);
+      }
+
+    }
+
     function unsetUsuario(usuarioId) {
 
       $.get(
@@ -55,6 +63,31 @@
 
     }
 
+    function unsetCancion(cancionId) {
+
+      $.get(
+        '{% url "cancion_eliminar" %}',
+        {
+          cancion_id : cancionId,
+        },
+        function (data) {
+
+          if (data.status=="success") {
+            alert("Canción eliminada");
+            location.reload();
+          }
+
+        }
+      )
+      .fail(
+        function (jqXHR, textStatus, errorThrown) {
+
+          alert(jqXHR.status+"\n"+textStatus+"\n"+errorThrown);
+
+        }
+      );
+
+    }
 
     </script>
 
@@ -104,35 +137,56 @@
                 {% for cancion in canciones %}
                 <div class="row cuadro-cancion">
 
-                    <div class="col-xs-2 col-md-4 col-lg-2 foto-cancion">
-                          {% if cancion.imagen == '' %}
-                            <h2>SIN CARATULA</h2>
-                          {% else %}
-                          <div class="picture">
-                            <img src="{% static 'media/' %}{{ cancion.imagen }}">
-                          </div>
-                          {% endif %}
-                    </div>
                     <div class="col-xs-10 col-md-8 col-lg-10 texto-cancion">
                         <div class="news">
-                            <div class="nombre-cancion">
-                              <h1>
-                                <a target="_blank" href="{% static 'media/' %}{{ cancion.archivo }}">{{ cancion.cancion }}</a>
-                              </h1>
-                            </div>
-                            <div class="descripcion-cancion">
-                                <h2>Artista:</h2>
+
+                          <table width="100%">
+                            <tr>
+                              <td rowspan="10" width="10%">
+                                <div class="picture">
+                                  <img src="{% static 'media/' %}{{ cancion.imagen }}" width="200px" height="200px">
+                                </div>
+                              </td>
+                              <td colspan="2">
+                                  <a style="font-size:50px" target="_blank" href="{% static 'media/' %}{{ cancion.archivo }}">{{ cancion.cancion }}</a>
+                                  <a href="#" onclick="showEliminarCancion('{{ cancion.id }}')"><img src="{% static 'img/icon-trash-a-512.png' %}" width="30px"></a>
+                              </td>
+                            </tr>
+                            <tr>
+                              <th align="left" width="25%">
+                                Artista:
+                              </th>
+                              <td>
                                 <p>{{ cancion.artista }}</p>
-                                <h2>Duración</h2>
+                              </td>
+                            </tr>
+                            <tr>
+                              <th align="left">
+                                Duración
+                              </th>
+                              <td>
                                 <p>{{ cancion.duracion }}</p>
-                                <h2>País de origen</h2>
+                              </td>
+                            </tr>
+                            <tr>
+                              <th align="left">
+                                País de origen
+                              </th>
+                              <td>
                                 <p>{{ cancion.pais }}</p>
-                                <h2>Fecha</h2>
+                              </td>
+                            </tr>
+                            <tr>
+                              <th align="left">
+                                Fecha
+                              </th>
+                              <td>
                                 <p>{{ cancion.registro_fecha }}</p>
-                            </div>
+                              </td>
+                            </tr>
+                          </table>
                         </div>
                     </div>
-
                 </div>
                 {% endfor %}
 
