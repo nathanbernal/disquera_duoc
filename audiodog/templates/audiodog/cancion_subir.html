@@ -96,7 +96,7 @@
 
                                     <label for="cancion">Titulo canción *</label>
                                     <input type="text" class="input" name="cancion" id="cancion" minlength="3" maxlength="40" pattern="[áÁàÀéÉèÈíÍìÌóÓòÒúÚùÙa-zA-Z ]{3,40}"
-                                    placeholder="Nombre canción (sólo letras, máx 40 caracteres)" title="Sólo letras están permitidas" autocomplete="off" validate required>
+                                    placeholder="Nombre canción (sólo letras, máx 40 caracteres)" title="Sólo letras están permitidas" autocomplete="off" validate required value="{{ cancion }}">
 
                                 </div>
                             </div>
@@ -106,15 +106,15 @@
 
                                     <label for="nombreartista">Artista *</label>
                                     <input type="text" class="input" name="artista" id="artista" minlength="3" maxlength="40" pattern="[áÁàÀéÉèÈíÍìÌóÓòÒúÚùÙa-zA-Z ]{3,40}"
-                                    placeholder="Nombre artista (sólo letras, máx 40 caracteres)" title="Sólo letras están permitidas" autocomplete="off" validate required>
+                                    placeholder="Nombre artista (sólo letras, máx 40 caracteres)" title="Sólo letras están permitidas" autocomplete="off" validate required value="{{ artista }}">
 
                                 </div>
 
                                 <div class="col-xs-6 cuadro-input">
 
-                                    <label for="duracion">Duración *</label>
-                                    <input type="number" class="input" name="duracion" id="artista" minlength="3" maxlength="40" pattern="[0-9]{3}"
-                                    placeholder="Ingrese duración en segundos" title="Sólo números" autocomplete="off" validate required>
+                                    <label for="duracion">Duración (minutos) *</label>
+                                    <input type="number" class="input" name="duracion" id="duracion" minlength="3" maxlength="40" pattern="[0-9]{3}"
+                                    placeholder="Ingrese duración en segundos" title="Sólo números" autocomplete="off" validate required value="{{ duracion }}">
 
                                 </div>
                             </div>
@@ -124,8 +124,8 @@
 
                                     <label for="pais">País *</label>
                                     <select class="input" name="pais" id="pais">
-                                      {% for pais in paises %}
-                                      <option value="{{ pais.id }}">{{ pais.id }} - {{ pais.pais }}</option>
+                                      {% for paisList in paises %}
+                                      <option value="{{ paisList.id }}" >{{ paisList.id }} - {{ paisList.pais }}</option>
                                       {% endfor %}
                                     </select>
 
@@ -145,12 +145,25 @@
                             </div>
 
                             <div class="row parte">
+
+                                <div class="col-xs-6 cuadro-input">
+                                  Para proceder con la carga de la nueva canción debe estar registrado.
+                                  Recuerde que su contraseña corresponde a los primeros 6 dígitos de su rut en orden inverso.
+                                </div class="col-xs-6 cuadro-input">
+
                                 <div class="col-xs-6 cuadro-input">
                                     <label for="usuario">Usuario</label>
                                     <input type="text" class="input" name="usuario" id="usuario" minlength="3" maxlength="40" required>
+                                    <label for="contrasena">Contrase&ntilde;a</label>
+                                    <input type="password" class="input" name="contrasena" id="contrasena" minlength="3" maxlength="40" required>
+                                    <span style="cursor:pointer" onclick="location.href='/usuario_contrasena/'"><small>No recuerdo mi contrase&ntilde:a</small></span>
                                 </div>
 
                             </div>
+
+                            {% if mensaje %}
+                            <h2>{{ mensaje }}</h2>
+                            {% endif %}
 
                             <div class="row">
                                 <div class="col-xs-12 bot">

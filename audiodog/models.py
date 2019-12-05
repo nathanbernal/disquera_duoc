@@ -1,4 +1,6 @@
 from django.db import models
+import logging
+logger = logging.getLogger(__name__)
 
 # Create your models here.
 
@@ -26,6 +28,10 @@ class Cancion(models.Model):
 class Usuario(models.Model):
 
     nombre = models.CharField(max_length=500, default='', null=False)
+
+    alias = models.CharField(max_length=500, default='', null=False)
+    contrasena = models.CharField(max_length=100, default='', null=False)
+
     rut = models.CharField(max_length=10)
     email = models.TextField(max_length=100)
     nacimiento_fecha = models.DateTimeField(default=timezone.now)
@@ -38,6 +44,7 @@ class Usuario(models.Model):
             default=timezone.now)
 
     def crear(self):
+
         self.registro_fecha = timezone.now()
         self.save()
 

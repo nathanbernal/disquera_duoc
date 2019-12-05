@@ -30,10 +30,15 @@ def usuario_guardar(request):
         (4, 'Smart TV'),
     ]
 
-    logger.error('GUARDANDO USUARIO  '+request.POST["nombre"])
-
     usuario = Usuario()
+
     usuario.nombre = request.POST["nombre"]
+    usuario.alias = request.POST["alias"]
+    passw = request.POST["rut"]
+
+    passTmp=passw[0:6]
+    usuario.contrasena = passTmp[::-1]
+
     usuario.rut = request.POST["rut"]
     usuario.email = request.POST["correo"]
     usuario.nacimiento_fecha = request.POST["fechanacimento"]
@@ -98,15 +103,54 @@ def cancion_subir(request):
 
 def cancion_guardar(request):
 
-    cancion = Cancion()
+    usuarioId = request.POST["usuario"]
+    contrasena = request.POST["contrasena"]
 
-    cancion.cancion = request.POST["cancion"]
-    cancion.artista = request.POST["artista"]
-    cancion.duracion = request.POST["duracion"]
-    cancion.pais = Pais.objects.get(id=request.POST["pais"])
-    cancion.imagen = request.FILES["caratula"]
-    cancion.archivo = request.FILES["audio"]
+    usuario = Usuario.objects.filter(alias=usuarioId)
 
-    cancion.save();
+    paises = Pais.objects.all()
+    dataOut={
+            "mensaje":"Las credenciales proporcionadas son incorrectas. Asegúrese de estar registrado como usuario antes de proceder con la carga de canciones.",
+            "cancion":request.POST["cancion"],
+            "artista":request.POST["artista"],
+            "duracion":request.POST["duracion"],
+            "pais":request.POST["pais"],
+            "paises":paises
+        }
 
-    return HttpResponseRedirect('/')
+    logger.error('BUSCANDO USUARIO  '+request.POST["usuario"]+" "+str(usuario.exists()))
+
+    if usuario.exists():
+
+        for u in usuario:
+
+            logger.error('USUARIO '+u.alias+" "+u.contrasena)
+
+            if u.contrasena == request.POST["contrasena"]:
+
+                cancion = Cancion()
+
+                cancion.cancion = request.POST["cancion"]
+                cancion.artista = request.POST["artista"]
+                cancion.duracion = request.POST["duracion"]
+                cancion.pais = Pais.objects.get(id=request.POST["pais"])
+                cancion.imagen = request.FILES["caratula"]
+                cancion.archivo = request.FILES["audio"]
+
+                cancion.save();
+
+                return HttpResponseRedirect('/')
+
+                break
+
+            else:
+
+                return render(request, 'audiodog/cancion_subir.html', dataOut)
+
+                break
+
+    else:
+
+        return render(request, 'audiodog/cancion_subir.html', dataOut)
+
+    #return HttpResponseRedirect('/')
