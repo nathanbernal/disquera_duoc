@@ -101,6 +101,9 @@ def cancion_subir(request):
     paises = Pais.objects.all()
     return render(request, 'audiodog/cancion_subir.html', { 'paises' : paises })
 
+def usuario_contrasena(request):
+    return render(request, 'audiodog/usuario_contrasena.html', {})
+
 def cancion_guardar(request):
 
     usuarioId = request.POST["usuario"]
@@ -154,3 +157,41 @@ def cancion_guardar(request):
         return render(request, 'audiodog/cancion_subir.html', dataOut)
 
     #return HttpResponseRedirect('/')
+
+def usuario_establecer(request):
+
+    usuarioId = request.POST["usuario"]
+    rut = request.POST["rut"]
+    contrasena = request.POST["contrasena"]
+
+    usuario = Usuario.objects.filter(alias=usuarioId).filter(rut=rut)
+
+    dataOut={
+            "mensaje":"Datos de usuario inválidos.",
+        }
+
+    logger.error('BUSCANDO USUARIO  '+request.POST["usuario"]+" "+str(usuario.exists()))
+
+    if usuario.exists():
+
+        for u in usuario:
+
+            logger.error('USUARIO '+u.alias+" "+u.contrasena)
+
+            if u.contrasena == request.POST["contrasena"]:
+
+                u.contrasena = request.POST["contrasena"]
+
+                u.save();
+                return HttpResponseRedirect('/')
+                break
+
+            else:
+
+                return render(request, 'audiodog/usuario_contrasena.html', dataOut)
+
+                break
+
+    else:
+
+        return render(request, 'audiodog/usuario_contrasena.html', dataOut)

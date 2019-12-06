@@ -1,0 +1,144 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Audio Dog - Registro</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/flexboxgrid.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.validate.js' %}"></script>
+
+    <script src="{% static 'js/validar-rut.js' %}"></script>
+
+</head>
+
+<body>
+    <div class="container-fluid sitio">
+        <div class="row">
+            <div class="col-xs-12 col-md-4 logo">
+                <a href="index.html"><img src="{% static 'img/logo1.png' %}" alt="Logo Audio Dog"></a>
+            </div>
+
+            <div class="col-xs-12 col-md-8 menu">
+                <a href="/"><div class="opcion-volver">volver</div></a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 principal reg">
+                <div class="row">
+                    <div class="col-xs-12 titulo-registro">
+                        <h1>ACTUALIZACIÓN DE CONTRASE&Ntilde;A</h1>
+                    </div>
+                </div>
+
+                <div class="row cuadro-registro">
+                    <div class="col-xs-12 col-md-6 form-registro">
+                        <div class="row">
+                            <div class="col-xs-12 reg-titulo">
+                                <h3>Formulario de recuperaci&oacute;n de contrase&ntilde;a</h3>
+                            </div>
+                        </div>
+                        <form method="POST" id="registroForm" action="/usuario_establecer/">
+
+                            {% csrf_token %}
+
+                            <div class="row parte">
+                                <div class="col-xs-12 cuadro-input">
+
+                                    <label for="nombre">Alias *</label>
+                                    <input type="text" class="input" name="alias" id="alias" minlength="3" maxlength="40" pattern="[áÁàÀéÉèÈíÍìÌóÓòÒúÚùÙa-zA-Z ]{3,40}"
+                                    placeholder="Alias (sólo letras, máx 40 caracteres)" title="Sólo letras están permitidas" autocomplete="off" validate required>
+
+                                </div>
+
+
+                                <div class="col-xs-6 cuadro-input">
+
+                                    <label for="run">Rut *</label>
+                                    <input type="text" class="input" name="rut" id="rut" placeholder="Ej: 12.345.678-9" autocomplete="off" oninput="checkRut(this)" validate required>
+
+                                </div>
+
+                                <div class="col-xs-6 cuadro-input">
+
+                                    <label for="run">Nueva password *</label>
+                                    <input type="text" class="input" name="contrasena" id="contrasena" required>
+
+                                </div>
+
+                                <div class="col-xs-12 bot">
+                                    <button type="submit">Establecer nueva contrase&ntilde;a</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <div class="col-xs-12 col-md-6 foto-registro">
+                        <img src="{% static 'img/fondo_registro.jpg' %}" alt="Audio Dog">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% block javascript %}
+
+<script>
+
+function getCiudad(regionId) {
+
+  $.get(
+    '{% url "ciudad_get" %}',
+    {
+      region_id : regionId,
+    },
+    function (data) {
+
+      $("#ciudad select").html("");
+
+      var opt="";
+      $.each(
+        data,
+        function (i, v) {
+          opt+='<option value="'+i+'">'+v+'</option>';
+
+        }
+      )
+
+      if (Object.keys(data).length > 0) {
+        $("#ciudad").html(opt).fadeIn();
+      } else {
+        $("#ciudad").html('<option value="0">REGIÓN SIN CIUDADES ASOCIADAS</option>').fadeIn();
+      }
+
+    }
+  )
+  .fail(
+    function (jqXHR, textStatus, errorThrown) {
+
+      alert(jqXHR.status+"\n"+textStatus+"\n"+errorThrown);
+
+    }
+  );
+
+}
+
+</script>
+
+{% endblock %}
+
+</body>
+
+</html>
