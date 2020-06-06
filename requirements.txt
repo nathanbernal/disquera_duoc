@@ -15,7 +15,7 @@ cupshelpers==1.0
 dbus-python==1.2.8
 decorator==4.4.0
 distro==1.4.0
-Django==2.2.7
+Django==2.2.13
 Faker==0.9.1
 fros==1.1
 future==0.18.2
